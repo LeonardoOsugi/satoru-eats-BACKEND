@@ -49,19 +49,19 @@ model order2 {
 }
 
 model order_ready {
-  id          Int         @id @default(autoincrement())
-  cart2_id    Int
-  total_price String
-  form        PaymentForm @default(DINHEIRO)
-  name        String      @db.VarChar(255)
-  code        String      @db.VarChar(10)
-  created_at  DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  cart2       cart2       @relation(fields: [cart2_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id         Int         @id @default(autoincrement())
+  cart2_id   Int
+  form       PaymentForm @default(DINHEIRO)
+  name       String      @db.VarChar(255)
+  code       String      @db.VarChar(10)
+  created_at DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  cart2      cart2       @relation(fields: [cart2_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model products {
   id                  Int           @id @default(autoincrement())
   image               String
+  code                String
   product_name        String        @db.VarChar(255)
   product_description String        @db.VarChar(255)
   price               String
