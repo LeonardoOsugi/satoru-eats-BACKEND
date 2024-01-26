@@ -1,7 +1,7 @@
 import prisma from "../config/database.js";
 
 export async function getProducts(req, res){
-    const {product_name, code} = req.query;
+    const {product_name, code_product} = req.query;
 
     try{
 
@@ -11,8 +11,8 @@ export async function getProducts(req, res){
             whereconditional = { ...whereconditional, product_name: product_name };
         }
 
-        if (code !== undefined && code !== '') {
-            whereconditional = { ...whereconditional, code: code };
+        if (code_product !== undefined && code_product !== '') {
+            whereconditional = { ...whereconditional, code_product: code_product };
         }
         const products = await prisma.products.findMany({where: whereconditional});
 

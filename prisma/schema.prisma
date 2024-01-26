@@ -7,68 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model cart {
-  id         Int      @id @default(autoincrement())
-  product_id Int
-  servations String   @db.VarChar(255)
-  created_at DateTime @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model cart2 {
-  id          Int           @id @default(autoincrement())
-  product_id  Int
-  servations  String        @db.VarChar(255)
-  created_at  DateTime      @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  products    products      @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  order       order[]
-  order2      order2[]
-  order_ready order_ready[]
-}
-
 model order {
-  id          Int         @id @default(autoincrement())
-  cart_id2    Int
-  total_price String
-  form        PaymentForm @default(DINHEIRO)
-  name        String      @db.VarChar(255)
-  code        String      @db.VarChar(10)
-  created_at  DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  cart2       cart2       @relation(fields: [cart_id2], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model order2 {
-  id          Int         @id @default(autoincrement())
-  cart_id2    Int
-  total_price String
-  form        PaymentForm @default(DINHEIRO)
-  name        String      @db.VarChar(255)
-  code        String      @db.VarChar(10)
-  created_at  DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  cart2       cart2       @relation(fields: [cart_id2], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model order_ready {
   id         Int         @id @default(autoincrement())
-  cart2_id   Int
   form       PaymentForm @default(DINHEIRO)
-  name       String      @db.VarChar(255)
-  code       String      @db.VarChar(10)
   created_at DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  cart2      cart2       @relation(fields: [cart2_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order_products         order_products[]
+}
+
+model order_products {
+  id                                           Int      @id @default(autoincrement())
+  product_id                                   Int
+  order_id                                     Int
+  sevations                                    String
+  status                                       Status   @default(FAZENDO)
+  name                                         String   @db.VarChar(255)
+  code                                         String   @db.VarChar(10)
+  created_at                                   DateTime @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  order                                        order @relation( fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                                      products @relation( fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model products {
-  id                  Int           @id @default(autoincrement())
-  image               String
-  code                String
-  product_name        String        @db.VarChar(255)
-  product_description String        @db.VarChar(255)
-  price               String
-  category            OrderCategory
-  created_at          DateTime      @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  cart                cart[]
-  cart2               cart2[]
+  id                                                 Int              @id @default(autoincrement())
+  image                                              String
+  code_product                                       String
+  product_name                                       String           @db.VarChar(255)
+  product_description                                String           @db.VarChar(255)
+  price                                              String
+  category                                           OrderCategory
+  created_at                                         DateTime         @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  order_products                                     order_products[] 
 }
 
 enum OrderCategory {
@@ -82,4 +50,9 @@ enum PaymentForm {
   DEBITO
   CREDITO
   DINHEIRO
+}
+
+enum Status {
+  FAZENDO
+  PRONTO
 }
