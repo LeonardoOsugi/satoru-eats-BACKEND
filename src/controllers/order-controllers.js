@@ -1,14 +1,20 @@
 import prisma from "../config/database.js";
 
 export async function postOrder(req, res){
+    console.log(req.body, "req.body");
     const {product_id, servations,status, form, name, code} = req.body;
     try{
+        const objeto = {
+            data:{product_id: parseInt(product_id), servations, status, name, code, form}
+        }
 
-        const order = await prisma.order.create({data:{product_id, servations, status, name, code, form}})
+
+        const order = await prisma.order.create(objeto)
 
         res.status(201).send(order);
     }catch(e){
-        res.status(200).send(e);
+        console.log(e);
+        res.status(400).send(e);
     }
 }
 
