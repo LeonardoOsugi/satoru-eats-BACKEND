@@ -7,7 +7,7 @@ orderRouter
 .post("/order", postOrder)
 .get("/order", getOrderFazendo)
 .get("/order-ready", getOrderPronto)
-.get("/order-name", getOrderName)
+.get("/order-name/:name", getOrderName)
 .put("/order/:id", updateOrder)
 .delete("/order/:id", deleteOrder)
 

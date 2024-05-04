@@ -55,12 +55,11 @@ export async function getOrderPronto(req, res){
 }
 
 export async function getOrderName(req, res){
-    const {name, code} = req.body;
+    const name = req.params.name
     try{
         const order = await prisma.order.findMany({
             where: {
-                name: name,
-                code: code
+                name
             },
             include: {
                 products: true
@@ -94,13 +93,14 @@ export async function updateOrder(req, res){
 export async function deleteOrder(req, res){
     const id = +req.params.id;
     try{ 
-        await prisma.order.delete({
+         await prisma.order.delete({
             where: {
                 id
             }
         })
         res.sendStatus(200)
     }catch(e){
+        console.error(e);
         res.status(500).send(e)
     }
 }
