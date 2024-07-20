@@ -1,23 +1,14 @@
 import prisma from "../config/database.js";
+import productsServices from "../services/products-services.js";
 
 export async function getProducts(req, res){
     const {product_name, code_product} = req.query;
 
     try{
-
-        let whereconditional = {};
-
-        if (product_name !== undefined && product_name !== '') {
-            whereconditional = { ...whereconditional, product_name: product_name };
-        }
-
-        if (code_product !== undefined && code_product !== '') {
-            whereconditional = { ...whereconditional, code_product: code_product };
-        }
-        const products = await prisma.products.findMany({where: whereconditional});
+        const products = await productsServices.getProducts({product_name, code_product})
 
         
-        res.status(200).send(products);
+        res.status(200).json(products);
     }catch(e){
         res.status(500).send(e);
     }
@@ -29,9 +20,9 @@ export async function getProductsId(req, res){
     const productId = +id;
 
     try{
-        const product = await prisma.products.findFirst({where: {id: productId}});
+        const product = await productsServices.getProductsId({productId})
 
-        res.status(200).send(product);
+        res.status(200).json(product);
     }catch(e){
         res.status(500).send(e)
     }
