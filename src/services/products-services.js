@@ -1,4 +1,5 @@
 import prisma from "../config/database.js";
+import productsRepositories from "../repositories/products-repositories.js";
 
 
 async function getProducts({product_name, code_product}){
@@ -12,11 +13,19 @@ async function getProducts({product_name, code_product}){
         whereconditional = { ...whereconditional, code_product: code_product };
     }
 
-    return await prisma.products.findMany({where: whereconditional});
+    const products = await productsRepositories.getProducts({whereconditional});
+
+    if(!products) throw new Error("Produtos não encontrados")
+
+    return products
 }
 
 async function getProductsId({productId}){
-    return await prisma.products.findFirst({where: {id: productId}});
+    const product = await productsRepositories.getProductsId({productId});
+
+    if(!product) throw new Error("Produto não encontrado");
+
+    return product
 }
 
 export default {
